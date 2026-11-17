@@ -481,7 +481,8 @@ class FloatService : Service() {
     private fun setupProjection(code: Int, data: Intent) {
         releaseProjection()
         val mpm = getSystemService(MediaProjectionManager::class.java)
-        val mp = mpm.getMediaProjection(code, data)
+        val mp: MediaProjection = mpm.getMediaProjection(code, data)
+            ?: throw IllegalStateException("capture permission is not available")
         mp.registerCallback(object : MediaProjection.Callback() {
             override fun onStop() { main.post { releaseProjection() } }
         }, main)
